@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101020">
+<title>Thathakathalu AI Studio</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#101020;color:#fff;font-family:Arial,sans-serif}
+header{padding:22px 16px;background:#19192c;border-bottom:1px solid #343450}
+h1{margin:0;font-size:23px;color:#d6b5ff}
+header p{color:#c3c3d9;margin-bottom:0}
+main{max-width:850px;margin:auto;padding:16px}
+.card{background:#1b1b30;padding:18px;border-radius:14px;margin-bottom:16px}
+h2{font-size:19px;margin-top:0}
+label{display:block;margin:15px 0 7px}
+textarea,input,select{width:100%;padding:12px;border:1px solid #494967;border-radius:9px;background:#101020;color:white;font-size:16px}
+textarea{min-height:150px;resize:vertical}
+button{padding:12px 15px;border:0;border-radius:9px;background:#a879ed;color:#151020;font-size:15px;font-weight:bold;margin:8px 5px 0 0}
+button.secondary{background:#363650;color:white}
+button:active{opacity:.8}
+.scene{padding:12px;border:1px solid #454563;border-radius:9px;margin:10px 0;white-space:pre-wrap}
+small{color:#bdbdd0}
+#status{color:#d6b5ff;white-space:pre-wrap}
+footer{text-align:center;padding:25px;color:#aaa}
+</style>
+</head>
+<body>
+<header>
+<h1>🎬 Thathakathalu AI Studio</h1>
+<p>Turn your stories into cartoon adventures.</p>
+</header>
+<main>
+<section class="card">
+<h2>✍️ Story Studio</h2>
+<label for="title">Story title</label>
+<input id="title" placeholder="My village story">
+<label for="story">Paste your complete story</label>
+<textarea id="story" placeholder="Paste your Telugu or English story here..."></textarea>
+<label for="style">Cartoon style</label>
+<select id="style">
+<option>Simple 3D Cartoon</option>
+<option>Colourful Village Cartoon</option>
+<option>Fantasy Cartoon</option>
+<option>Funny Cartoon</option>
+</select>
+<label for="length">Scene length</label>
+<select id="length">
+<option value="150">Short scenes</option>
+<option value="300">Medium scenes</option>
+<option value="500">Long scenes</option>
+</select>
+<button onclick="createScenes()">Create Storyboard</button>
+<button class="secondary" onclick="saveProject()">Save Project</button>
+<button class="secondary" onclick="loadProject()">Load Project</button>
+<p id="status" aria-live="polite"></p>
+</section>
+<section class="card">
+<h2>🎭 Character Studio</h2>
+<p>Describe the characters in your story.</p>
+<textarea id="characters" placeholder="Example: A kind elderly village grandfather wearing a white dhoti..."></textarea>
+<button onclick="saveCharacters()">Save Characters</button>
+<small>Character descriptions are saved with this project.</small>
+</section>
+<section class="card">
+<h2>🎞️ Storyboard</h2>
+<div id="scenes"><p>Your scenes will appear here.</p></div>
+<button class="secondary" onclick="downloadStoryboard()">Export Storyboard</button>
+</section>
+<section class="card">
+<h2>📽️ Video Production</h2>
+<p>Next development stage: connect real animation, Telugu voice generation, subtitles and video rendering.</p>
+<small>This prototype does not yet generate animated videos or AI voices.</small>
+</section>
+</main>
+<footer>Thathakathalu AI Studio · Your stories, your imagination.</footer>
+<script>
+let currentScenes=[];
+function createScenes(){
+ const story=document.getElementById('story').value.trim();
+ const size=Number(document.getElementById('length').value);
+ if(!story){alert('Please paste your story first.');return;}
+ const sentences=story.match(/[^.!?।\n]+[.!?।]?/g)||[story];
+ const units=sentences.map(s=>s.trim()).filter(Boolean);
+ currentScenes=[];
+ let chunk='';
+ for(const unit of units){
+  if(chunk && (chunk.length+unit.length+1)>size){
+   currentScenes.push(chunk.trim());chunk='';
+  }
+  chunk+=(chunk?' ':'')+unit;
+ }
+ if(chunk.trim())currentScenes.push(chunk.trim());
+ renderScenes();
+ document.getElementById('status').textContent='Storyboard created: '+currentScenes.length+' scenes. These are text scenes, not generated animation.';
+}
+function renderScenes(){
+ const box=document.getElementById('scenes');
+ box.innerHTML='';
+ currentScenes.forEach((scene,i)=>{
+  const div=document.createElement('div');div.className='scene';
+  const heading=document.createElement('strong');heading.textContent='Scene '+(i+1);
+  const text=document.createElement('p');text.textContent=scene;
+  const edit=document.createElement('button');edit.textContent='Edit scene';
+  edit.onclick=()=>{const revised=prompt('Edit scene '+(i+1),currentScenes[i]);if(revised!==null){currentScenes[i]=revised;renderScenes();}};
+  div.append(heading,text,edit);box.append(div);
+ });
+}
+function saveCharacters(){
+ localStorage.setItem('tt_characters',document.getElementById('characters').value);
+ document.getElementById('status').textContent='Character descriptions saved on this device.';
+}
+function saveProject(){
+ const project={title:document.getElementById('title').value,story:document.getElementById('story').value,style:document.getElementById('style').value,length:document.getElementById('length').value,characters:document.getElementById('characters').value,scenes:currentScenes};
+ localStorage.setItem('tt_project',JSON.stringify(project));
+ document.getElementById('status').textContent='Project saved in this browser on this device.';
+}
+function loadProject(){
+ try{
+ const p=JSON.parse(localStorage.getItem('tt_project'));
+ if(!p){alert('No saved project found on this device.');return;}
+ document.getElementById('title').value=p.title||'';
+ document.getElementById('story').value=p.story||'';
+ document.getElementById('style').value=p.style||'Simple 3D Cartoon';
+ document.getElementById('length').value=p.length||'150';
+ document.getElementById('characters').value=p.characters||'';
+ currentScenes=p.scenes||[];renderScenes();
+ document.getElementById('status').textContent='Project loaded.';
+ }catch(e){alert('Could not load project.');}
+}
+function downloadStoryboard(){
+ if(!currentScenes.length){alert('Create your storyboard first.');return;}
+ const content=currentScenes.map((s,i)=>'SCENE '+(i+1)+'\n'+s).join('\n\n');
+ const blob=new Blob([content],{type:'text/plain;charset=utf-8'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='thathakathalu-storyboard.txt';a.click();URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
