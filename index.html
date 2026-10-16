@@ -1,726 +1,773 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101020">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17152b">
+  <title>Thathakathalu AI Studio</title>
 
-<title>Thathakathalu AI Studio</title>
+  <style>
+    :root {
+      --bg: #10101d;
+      --panel: #1c1b30;
+      --panel2: #25233d;
+      --text: #f5f3ff;
+      --muted: #b8b4d2;
+      --accent: #ffb347;
+      --accent2: #ff7b54;
+      --border: #3c385c;
+      --success: #7ee0ad;
+      --danger: #ff8888;
+    }
 
-<style>
-* {
-  box-sizing: border-box;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  background: #101020;
-  color: #f5f3ff;
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-}
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
 
-header {
-  padding: 24px 18px;
-  background: #19182d;
-  border-bottom: 1px solid #343450;
-}
+    header {
+      padding: 24px 16px;
+      text-align: center;
+      background: linear-gradient(135deg, #29204a, #6a2c52);
+      border-bottom: 1px solid var(--border);
+    }
 
-h1 {
-  color: #d6a0ff;
-  font-size: 25px;
-  margin: 0 0 8px;
-}
+    header h1 {
+      margin: 0;
+      font-size: clamp(25px, 6vw, 38px);
+    }
 
-header p {
-  margin: 0;
-  color: #c9c5dc;
-}
+    header p {
+      color: #eee6ff;
+      margin: 8px auto 0;
+      max-width: 650px;
+    }
 
-main {
-  max-width: 850px;
-  margin: auto;
-  padding: 16px;
-}
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px;
+      background: #171628;
+      border-bottom: 1px solid var(--border);
+    }
 
-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 16px;
-  background: #201e38;
-  border-radius: 14px;
-  margin-bottom: 18px;
-}
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 8px 13px;
+      border-radius: 9px;
+      font-size: 14px;
+    }
 
-nav a {
-  color: #e0baff;
-  text-decoration: none;
-  background: #302b4a;
-  padding: 9px 12px;
-  border-radius: 9px;
-  font-size: 14px;
-}
+    nav a:hover {
+      border-color: var(--accent);
+    }
 
-.card {
-  background: #201e38;
-  border-radius: 18px;
-  padding: 20px;
-  margin-bottom: 20px;
-  overflow-wrap: anywhere;
-}
+    main {
+      width: min(100% - 24px, 1000px);
+      margin: 22px auto 45px;
+    }
 
-h2 {
-  font-size: 22px;
-  margin-top: 0;
-}
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 18px;
+      border-radius: 15px;
+      margin-bottom: 18px;
+    }
 
-h3 {
-  color: #e0baff;
-}
+    h2 {
+      font-size: 21px;
+      margin: 0 0 12px;
+    }
 
-label {
-  display: block;
-  margin: 15px 0 7px;
-}
+    h3 {
+      font-size: 17px;
+      margin-top: 0;
+    }
 
-input,
-textarea,
-select {
-  display: block;
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #494563;
-  border-radius: 11px;
-  background: #100e20;
-  color: white;
-  font-size: 16px;
-}
+    label {
+      display: block;
+      margin: 13px 0 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
 
-textarea {
-  min-height: 140px;
-  resize: vertical;
-}
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: #121121;
+      color: var(--text);
+      font: inherit;
+    }
 
-button {
-  border: 0;
-  border-radius: 11px;
-  background: #bd79f5;
-  color: #170d25;
-  padding: 13px 16px;
-  margin: 10px 6px 0 0;
-  font-size: 15px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    textarea {
+      min-height: 145px;
+      resize: vertical;
+    }
 
-button.secondary {
-  background: #393653;
-  color: white;
-}
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
 
-button:active {
-  opacity: 0.8;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
 
-small {
-  color: #c4bdd6;
-}
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 17px;
+    }
 
-.scene {
-  background: #151329;
-  border: 1px solid #494563;
-  padding: 16px;
-  margin: 14px 0;
-  border-radius: 12px;
-}
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      background: var(--accent);
+      color: #25162a;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-.scene h3 {
-  margin-top: 0;
-}
+    button:hover {
+      filter: brightness(1.08);
+    }
 
-.prompt {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
+    button.secondary {
+      background: var(--panel2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
 
-.character-card {
-  border: 1px solid #494563;
-  border-radius: 12px;
-  padding: 12px;
-  margin: 12px 0;
-}
+    button.danger {
+      background: #632c3c;
+      color: white;
+    }
 
-.character-card img {
-  display: block;
-  width: 100%;
-  max-height: 250px;
-  object-fit: contain;
-  border-radius: 10px;
-}
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
 
-.status {
-  color: #d6a0ff;
-  overflow-wrap: anywhere;
-}
+    .notice {
+      padding: 12px;
+      border-radius: 9px;
+      background: #302746;
+      border: 1px solid #59436e;
+      color: #f0e5ff;
+      font-size: 13px;
+      margin-top: 12px;
+    }
 
-footer {
-  text-align: center;
-  padding: 25px;
-  color: #aaa5c0;
-}
+    .status {
+      margin-top: 12px;
+      color: var(--success);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
 
-a {
-  color: #d6a0ff;
-}
+    .character-preview {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #141325;
+    }
 
-@media (max-width: 480px) {
-  main {
-    padding: 12px;
-  }
+    .character-preview img {
+      display: block;
+      max-width: 180px;
+      max-height: 220px;
+      object-fit: contain;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
 
-  .card {
-    padding: 16px;
-  }
+    .scene-card {
+      background: #171629;
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: 12px;
+      margin: 13px 0;
+    }
 
-  h1 {
-    font-size: 22px;
-  }
+    .scene-card h3 {
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
 
-  button {
-    max-width: 100%;
-  }
-}
-</style>
+    .scene-card p {
+      overflow-wrap: anywhere;
+    }
+
+    .prompt {
+      background: #0e0d19;
+      border: 1px solid #39344f;
+      border-radius: 8px;
+      padding: 12px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 14px;
+    }
+
+    .scene-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .scene-actions button {
+      padding: 8px 11px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 20px;
+    }
+
+    @media (max-width: 650px) {
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+
+      .panel {
+        padding: 14px;
+      }
+
+      .buttons button {
+        flex: 1 1 auto;
+      }
+
+      nav a {
+        font-size: 13px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
   <h1>🎬 Thathakathalu AI Studio</h1>
-  <p>Turn your stories into cartoon adventures.</p>
+  <p>Turn Telugu stories and village memories into cartoon storyboards and visual prompts.</p>
 </header>
-
-<main>
 
 <nav>
   <a href="index.html">🎬 Story Studio</a>
-  <a href="character-studio.html">🎭 Character Studio</a>
+  <a href="character-studio.html">🧑 Character Studio</a>
   <a href="character-library.html">📚 Character Library</a>
 </nav>
 
-<section class="card">
-  <h2>✍️ Story Studio</h2>
+<main>
 
-  <label for="title">Story title</label>
-  <input
-    id="title"
-    type="text"
-    placeholder="My village story"
-  >
+  <section class="panel">
+    <h2>✍️ Create Your Story</h2>
 
-  <label for="story">Paste your complete story</label>
-  <textarea
-    id="story"
-    placeholder="Paste your Telugu or English story here..."
-  ></textarea>
+    <label for="storyTitle">Story title</label>
+    <input
+      id="storyTitle"
+      type="text"
+      placeholder="Example: Ramayya Thatha and the Magic Mango Tree"
+    >
 
-  <label for="style">Cartoon style</label>
-  <select id="style">
-    <option>Simple 3D Cartoon</option>
-    <option>Colorful Village Cartoon</option>
-    <option>Fantasy Cartoon</option>
-    <option>Funny Cartoon</option>
-    <option>Emotional Cinematic Cartoon</option>
-    <option>Traditional Indian Cartoon</option>
-  </select>
+    <label for="storyText">Write or paste your complete story</label>
+    <textarea
+      id="storyText"
+      placeholder="Mee Telugu story ikkada rayandi... You can write in Telugu, Telugu English text, or English."
+    ></textarea>
 
-  <label for="length">Scene length</label>
-  <select id="length">
-    <option value="150">Short scenes</option>
-    <option value="300">Medium scenes</option>
-    <option value="500">Long scenes</option>
-  </select>
+    <div class="grid">
+      <div>
+        <label for="style">Cartoon style</label>
+        <select id="style">
+          <option value="3D animated family film style">3D animated cartoon</option>
+          <option value="Pixar-inspired polished 3D animation style">Polished 3D family animation</option>
+          <option value="Indian village storybook cartoon style">Indian village cartoon</option>
+          <option value="Traditional Indian folk-art animation style">Indian folk-art animation</option>
+          <option value="Cute colorful children's animation style">Cute children's cartoon</option>
+          <option value="Cinematic realistic 3D animation style">Cinematic 3D animation</option>
+          <option value="Hand-drawn 2D cartoon style">2D hand-drawn cartoon</option>
+        </select>
+      </div>
 
-  <button onclick="createScenes()">🎬 Create Storyboard</button>
-  <button class="secondary" onclick="saveProject()">💾 Save Project</button>
-  <button class="secondary" onclick="loadProject()">📂 Load Project</button>
+      <div>
+        <label for="sceneLength">Scene length</label>
+        <select id="sceneLength">
+          <option value="short">Short scenes</option>
+          <option value="medium" selected>Medium scenes</option>
+          <option value="long">Long scenes</option>
+        </select>
+      </div>
+    </div>
 
-  <p id="status" class="status" aria-live="polite"></p>
-</section>
+    <label for="language">Storyboard language</label>
+    <select id="language">
+      <option value="English">English</option>
+      <option value="Telugu English transliteration">Telugu written in English letters</option>
+      <option value="Telugu">Telugu</option>
+    </select>
 
-<section class="card">
-  <h2>🎭 Character Studio</h2>
+    <div class="notice">
+      Tip: Write the story in chronological order. Include the characters,
+      location, actions, emotions, and ending. Clear stories generally produce
+      better scene divisions.
+    </div>
+  </section>
 
-  <p>
-    Describe the characters in your story or reuse a character
-    saved in your Character Library.
-  </p>
+  <section class="panel">
+    <h2>🧑 Select a Character</h2>
 
-  <label for="savedCharacter">Select a saved character</label>
-  <select id="savedCharacter">
-    <option value="">Choose a saved character...</option>
-  </select>
+    <p class="muted">
+      Characters saved in your Character Library can appear here when you open
+      this site in the same browser.
+    </p>
 
-  <button onclick="refreshCharacters()">🔄 Refresh Characters</button>
-  <button class="secondary" onclick="insertCharacter()">
-    ➕ Use Selected Character
-  </button>
+    <label for="characterSelect">Saved character</label>
+    <select id="characterSelect">
+      <option value="">No character selected</option>
+    </select>
 
-  <label for="characters">Character descriptions</label>
-  <textarea
-    id="characters"
-    placeholder="Example: Ramayya Thatha, a kind elderly Indian grandfather wearing a white dhoti and cream shirt..."
-  ></textarea>
+    <div class="buttons">
+      <button type="button" class="secondary" id="refreshCharacters">
+        Refresh Characters
+      </button>
+      <a
+        href="character-library.html"
+        style="color:#ffcf8c; align-self:center; font-size:14px;"
+      >Open Character Library →</a>
+    </div>
 
-  <button onclick="saveCharacters()">💾 Save Character Notes</button>
+    <div id="characterPreview" class="character-preview"></div>
 
-  <p>
-    <a href="character-library.html">Open Character Library →</a>
-  </p>
+    <label for="characterNotes">Additional character details</label>
+    <textarea
+      id="characterNotes"
+      style="min-height:90px"
+      placeholder="Example: Ramayya Thatha always wears a cream shirt and white dhoti. Keep his face and clothes consistent in every scene."
+    ></textarea>
 
-  <div id="characterPreview"></div>
-</section>
+    <div class="buttons">
+      <button type="button" class="secondary" id="saveCharacterNotes">
+        Save Character Notes
+      </button>
+    </div>
 
-<section class="card">
-  <h2>🎞️ Storyboard</h2>
+    <p class="muted">
+      Character descriptions help create consistent prompts, but image and video
+      services may still produce different-looking characters.
+    </p>
+  </section>
 
-  <p>
-    Your scenes will appear here with scene descriptions,
-    visual prompts and character references.
-  </p>
+  <section class="panel">
+    <h2>⚙️ Generate Storyboard</h2>
 
-  <div id="scenes">
-    <p>No scenes created yet. Paste a story and tap Create Storyboard.</p>
-  </div>
+    <div class="buttons">
+      <button type="button" id="generateBtn">✨ Generate Storyboard</button>
+      <button type="button" class="secondary" id="saveProjectBtn">💾 Save Project</button>
+      <button type="button" class="secondary" id="loadProjectBtn">📂 Load Project</button>
+      <button type="button" class="secondary" id="exportBtn">📄 Export Storyboard</button>
+      <button type="button" class="secondary" id="copyAllBtn">📋 Copy All Prompts</button>
+      <button type="button" class="danger" id="clearBtn">Clear Form</button>
+    </div>
 
-  <button class="secondary" onclick="downloadStoryboard()">
-    📥 Export Storyboard
-  </button>
-</section>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
 
-<section class="card">
-  <h2>🎥 Video Production</h2>
+    <div class="notice">
+      This version generates storyboard text and image prompts. It does not
+      generate actual images, voice audio, or finished videos by itself.
+    </div>
+  </section>
 
-  <p>
-    Prepare your storyboard for the next stage of production.
-  </p>
-
-  <p>
-    This version creates text-based storyboards and visual prompts.
-    Actual animation, Telugu voice generation and video rendering
-    require additional tools or services.
-  </p>
-
-  <a href="character-studio.html">Create a Character Design Prompt →</a>
-</section>
+  <section class="panel" id="resultsPanel">
+    <h2>🎞️ Your Storyboard</h2>
+    <p id="storySummary" class="muted">Your generated scenes will appear here.</p>
+    <div id="storyboard"></div>
+  </section>
 
 </main>
 
 <footer>
-  Thathakathalu AI Studio · Your stories, your imagination.
+  Thathakathalu AI Studio · Made for creative storytelling
 </footer>
 
 <script>
-const PROJECT_KEY = "thathakathalu_story_project_v1";
-const NOTES_KEY = "thathakathalu_character_notes_v1";
-const LIBRARY_KEY = "thathakathalu_character_library_v1";
+(function () {
+  "use strict";
 
-let currentScenes = [];
+  const CHARACTER_KEY = "thathakathalu_character_library_v1";
+  const NOTES_KEY = "thathakathalu_character_notes_v1";
+  const PROJECT_KEY = "thathakathalu_story_project_v2";
 
-function setStatus(message) {
-  document.getElementById("status").textContent = message;
-}
+  const $ = (id) => document.getElementById(id);
 
-function getSavedCharacters() {
-  try {
-    const data = JSON.parse(localStorage.getItem(LIBRARY_KEY) || "[]");
-    return Array.isArray(data) ? data : [];
-  } catch (error) {
+  let generatedScenes = [];
+  let selectedCharacter = null;
+
+  function setStatus(message, isError = false) {
+    const status = $("status");
+    status.textContent = message;
+    status.style.color = isError ? "var(--danger)" : "var(--success)";
+  }
+
+  function readStorage(key, fallback) {
+    try {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+      console.error("Storage read failed:", error);
+      return fallback;
+    }
+  }
+
+  function saveStorage(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (error) {
+      console.error("Storage write failed:", error);
+      setStatus(
+        "Could not save. Browser storage may be full or unavailable.",
+        true
+      );
+      return false;
+    }
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function (character) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[character];
+    });
+  }
+
+  function normalizeCharacterList(value) {
+    if (Array.isArray(value)) return value;
+
+    if (value && typeof value === "object") {
+      if (Array.isArray(value.characters)) return value.characters;
+      if (Array.isArray(value.items)) return value.items;
+    }
+
     return [];
   }
-}
 
-function refreshCharacters() {
-  const select = document.getElementById("savedCharacter");
-  const previousValue = select.value;
-  const characters = getSavedCharacters();
+  function loadCharacters() {
+    const selector = $("characterSelect");
+    const previousId = selector.value;
 
-  select.replaceChildren();
-
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  defaultOption.textContent = characters.length
-    ? "Choose a saved character..."
-    : "No saved characters found";
-
-  select.appendChild(defaultOption);
-
-  characters.forEach((character, index) => {
-    const option = document.createElement("option");
-    option.value = String(index);
-    option.textContent = character.name || "Unnamed character";
-    select.appendChild(option);
-  });
-
-  if (
-    previousValue !== "" &&
-    Number(previousValue) < characters.length
-  ) {
-    select.value = previousValue;
-  }
-
-  renderCharacterPreview();
-}
-
-function insertCharacter() {
-  const select = document.getElementById("savedCharacter");
-
-  if (select.value === "") {
-    alert("First select a saved character.");
-    return;
-  }
-
-  const characters = getSavedCharacters();
-  const character = characters[Number(select.value)];
-
-  if (!character) {
-    alert("Character not found. Refresh the character list.");
-    return;
-  }
-
-  const description = [
-    "Character name: " + (character.name || ""),
-    "Age: " + (character.age || "Not specified"),
-    "Appearance: " + (character.appearance || ""),
-    "Personality: " + (character.personality || ""),
-    "Consistency instruction: Keep the same face, hairstyle, clothing and proportions in every scene."
-  ].join("\n");
-
-  const textarea = document.getElementById("characters");
-  const existing = textarea.value.trim();
-
-  if (existing.includes("Character name: " + character.name)) {
-    alert("This character is already in your character notes.");
-    return;
-  }
-
-  textarea.value = existing
-    ? existing + "\n\n" + description
-    : description;
-
-  saveCharacters();
-
-  alert(
-    character.name +
-    " added to your story's character notes."
-  );
-}
-
-function saveCharacters() {
-  try {
-    localStorage.setItem(
-      NOTES_KEY,
-      document.getElementById("characters").value
+    const characters = normalizeCharacterList(
+      readStorage(CHARACTER_KEY, [])
     );
 
-    setStatus("Character notes saved in this browser.");
-  } catch (error) {
-    alert("Unable to save character notes in browser storage.");
-  }
-}
+    selector.innerHTML = "";
 
-function loadCharacterNotes() {
-  try {
-    document.getElementById("characters").value =
-      localStorage.getItem(NOTES_KEY) || "";
-  } catch (error) {
-    document.getElementById("characters").value = "";
-  }
-}
+    const noneOption = document.createElement("option");
+    noneOption.value = "";
+    noneOption.textContent = "No character selected";
+    selector.appendChild(noneOption);
 
-function renderCharacterPreview() {
-  const container = document.getElementById("characterPreview");
-  const characters = getSavedCharacters();
+    characters.forEach(function (character, index) {
+      if (!character || typeof character !== "object") return;
 
-  container.replaceChildren();
+      const option = document.createElement("option");
+      option.value = String(character.id ?? index);
+      option.textContent = character.name || "Unnamed character";
+      selector.appendChild(option);
+    });
 
-  if (!characters.length) {
-    const message = document.createElement("p");
-    message.textContent =
-      "No saved characters found. Add one in Character Library first.";
-    container.appendChild(message);
-    return;
-  }
-
-  const heading = document.createElement("h3");
-  heading.textContent = "Your Character Library";
-  container.appendChild(heading);
-
-  characters.forEach(character => {
-    const card = document.createElement("div");
-    card.className = "character-card";
-
-    const name = document.createElement("strong");
-    name.textContent = character.name || "Unnamed character";
-    card.appendChild(name);
-
-    if (
-      character.image &&
-      character.image.startsWith("data:image/")
-    ) {
-      const image = document.createElement("img");
-      image.src = character.image;
-      image.alt = character.name || "Saved character";
-      image.loading = "lazy";
-      card.appendChild(image);
+    if (characters.some((character, index) =>
+      String(character.id ?? index) === previousId
+    )) {
+      selector.value = previousId;
     }
 
-    const appearance = document.createElement("p");
-    appearance.textContent =
-      character.appearance || "No appearance description.";
-    card.appendChild(appearance);
+    updateSelectedCharacter();
 
-    container.appendChild(card);
-  });
-}
-
-function createScenes() {
-  const title =
-    document.getElementById("title").value.trim() || "Untitled Story";
-
-  const story = document.getElementById("story").value.trim();
-  const style = document.getElementById("style").value;
-  const sceneLength = Number(document.getElementById("length").value);
-  const characterNotes =
-    document.getElementById("characters").value.trim();
-
-  if (!story) {
-    alert("Please paste your complete story first.");
-    return;
+    if (characters.length === 0) {
+      setStatus(
+        "No saved characters found. You can still create a storyboard."
+      );
+    } else {
+      setStatus("Character Library loaded: " + characters.length + " character(s).");
+    }
   }
 
-  /*
-    Split the story into sentences and combine them into
-    readable scenes. This is a text-based storyboard, not AI
-    video generation.
-  */
+  function updateSelectedCharacter() {
+    const characters = normalizeCharacterList(
+      readStorage(CHARACTER_KEY, [])
+    );
 
-  const sentences = story
-    .replace(/\r/g, "")
-    .split(/(?<=[.!?।])\s+|\n+/)
-    .map(sentence => sentence.trim())
-    .filter(Boolean);
+    const selectedId = $("characterSelect").value;
 
-  currentScenes = [];
-  let currentText = "";
+    selectedCharacter = null;
 
-  sentences.forEach(sentence => {
-    if (
-      currentText &&
-      (currentText.length + sentence.length + 1 > sceneLength)
-    ) {
-      currentScenes.push(currentText.trim());
-      currentText = "";
+    if (selectedId !== "") {
+      selectedCharacter = characters.find(function (character, index) {
+        return String(character.id ?? index) === selectedId;
+      }) || null;
     }
 
-    currentText += (currentText ? " " : "") + sentence;
-  });
+    const preview = $("characterPreview");
 
-  if (currentText.trim()) {
-    currentScenes.push(currentText.trim());
-  }
-
-  if (!currentScenes.length) {
-    currentScenes = [story];
-  }
-
-  renderScenes(title, style, characterNotes);
-
-  setStatus(
-    "Storyboard created: " +
-    currentScenes.length +
-    " text scenes. These are not generated animations."
-  );
-}
-
-function renderScenes(title, style, characterNotes) {
-  const container = document.getElementById("scenes");
-  container.replaceChildren();
-
-  currentScenes.forEach((text, index) => {
-    const scene = document.createElement("article");
-    scene.className = "scene";
-
-    const heading = document.createElement("h3");
-    heading.textContent = "Scene " + (index + 1);
-    scene.appendChild(heading);
-
-    const storyHeading = document.createElement("strong");
-    storyHeading.textContent = "Story action";
-    scene.appendChild(storyHeading);
-
-    const action = document.createElement("p");
-    action.className = "prompt";
-    action.textContent = text;
-    scene.appendChild(action);
-
-    const visualHeading = document.createElement("strong");
-    visualHeading.textContent = "Visual prompt";
-    scene.appendChild(visualHeading);
-
-    const visualPrompt = [
-      "Story: " + title,
-      "Scene: " + (index + 1),
-      "Visual style: " + style,
-      "Scene action: " + text,
-      "Character references: " +
-        (characterNotes || "No character reference supplied."),
-      "Create a clear, family-friendly cartoon scene.",
-      "Maintain character appearance and clothing consistency."
-    ].join("\n");
-
-    const visual = document.createElement("p");
-    visual.className = "prompt";
-    visual.textContent = visualPrompt;
-    scene.appendChild(visual);
-
-    const copyButton = document.createElement("button");
-    copyButton.textContent = "📋 Copy Visual Prompt";
-
-    copyButton.onclick = async function () {
-      try {
-        await navigator.clipboard.writeText(visualPrompt);
-        alert("Visual prompt copied!");
-      } catch (error) {
-        window.prompt("Copy the visual prompt:", visualPrompt);
-      }
-    };
-
-    scene.appendChild(copyButton);
-    container.appendChild(scene);
-  });
-}
-
-function saveProject() {
-  const project = {
-    title: document.getElementById("title").value,
-    story: document.getElementById("story").value,
-    style: document.getElementById("style").value,
-    length: document.getElementById("length").value,
-    characters: document.getElementById("characters").value,
-    scenes: currentScenes
-  };
-
-  try {
-    localStorage.setItem(PROJECT_KEY, JSON.stringify(project));
-    saveCharacters();
-    setStatus("Project saved successfully in this browser.");
-  } catch (error) {
-    alert("Could not save the project. Browser storage may be full.");
-  }
-}
-
-function loadProject() {
-  let project;
-
-  try {
-    const saved = localStorage.getItem(PROJECT_KEY);
-
-    if (!saved) {
-      alert("No saved project found in this browser.");
+    if (!selectedCharacter) {
+      preview.style.display = "none";
+      preview.innerHTML = "";
       return;
     }
 
-    project = JSON.parse(saved);
-  } catch (error) {
-    alert("Could not read the saved project.");
-    return;
+    preview.style.display = "block";
+
+    const name = escapeHTML(selectedCharacter.name || "Unnamed character");
+    const age = escapeHTML(selectedCharacter.age || "");
+    const appearance = escapeHTML(selectedCharacter.appearance || "");
+    const personality = escapeHTML(selectedCharacter.personality || "");
+
+    let imageHTML = "";
+
+    if (
+      typeof selectedCharacter.image === "string" &&
+      selectedCharacter.image.startsWith("data:image/")
+    ) {
+      imageHTML =
+        '<img src="' + selectedCharacter.image +
+        '" alt="Selected character preview">';
+    }
+
+    preview.innerHTML =
+      imageHTML +
+      "<strong>" + name + "</strong>" +
+      (age ? "<p>Age: " + age + "</p>" : "") +
+      (appearance ? "<p><strong>Appearance:</strong> " + appearance + "</p>" : "") +
+      (personality ? "<p><strong>Personality:</strong> " + personality + "</p>" : "");
+
+    const savedNotes = $("characterNotes").value.trim();
+
+    const description = [
+      selectedCharacter.name ? "Character: " + selectedCharacter.name : "",
+      selectedCharacter.age ? "Age: " + selectedCharacter.age : "",
+      selectedCharacter.appearance ? "Appearance: " + selectedCharacter.appearance : "",
+      selectedCharacter.personality ? "Personality: " + selectedCharacter.personality : ""
+    ].filter(Boolean).join(". ");
+
+    if (description && !savedNotes) {
+      $("characterNotes").value = description;
+    }
   }
 
-  document.getElementById("title").value = project.title || "";
-  document.getElementById("story").value = project.story || "";
-  document.getElementById("style").value =
-    project.style || "Simple 3D Cartoon";
-  document.getElementById("length").value =
-    project.length || "150";
-  document.getElementById("characters").value =
-    project.characters || "";
+  function saveCharacterNotes() {
+    const notes = $("characterNotes").value.trim();
 
-  currentScenes = Array.isArray(project.scenes)
-    ? project.scenes
-    : [];
-
-  if (currentScenes.length) {
-    renderScenes(
-      project.title || "Untitled Story",
-      project.style || "Simple 3D Cartoon",
-      project.characters || ""
-    );
-  } else {
-    document.getElementById("scenes").replaceChildren();
-    const message = document.createElement("p");
-    message.textContent = "Project loaded. Create a storyboard to see scenes.";
-    document.getElementById("scenes").appendChild(message);
+    if (saveStorage(NOTES_KEY, notes)) {
+      setStatus("Character notes saved in this browser.");
+    }
   }
 
-  setStatus("Project loaded successfully.");
-}
-
-function downloadStoryboard() {
-  if (!currentScenes.length) {
-    alert("Create a storyboard before exporting.");
-    return;
+  function restoreCharacterNotes() {
+    const notes = readStorage(NOTES_KEY, "");
+    if (typeof notes === "string") {
+      $("characterNotes").value = notes;
+    }
   }
 
-  const title =
-    document.getElementById("title").value.trim() || "Story";
+  function splitIntoSentences(text) {
+    const cleaned = text
+      .replace(/\r/g, "\n")
+      .replace(/[ \t]+/g, " ")
+      .trim();
 
-  const style = document.getElementById("style").value;
-  const characters =
-    document.getElementById("characters").value.trim();
+    if (!cleaned) return [];
 
-  let output =
-    "THATHAKATHALU AI STUDIO\n" +
-    "Story: " + title + "\n" +
-    "Cartoon style: " + style + "\n\n" +
-    "CHARACTER REFERENCES\n" +
-    (characters || "No character references supplied.") +
-    "\n\n";
+    const paragraphs = cleaned
+      .split(/\n+/)
+      .map(part => part.trim())
+      .filter(Boolean);
 
-  currentScenes.forEach((scene, index) => {
-    output +=
-      "SCENE " + (index + 1) + "\n" +
-      "Story action:\n" + scene + "\n\n" +
-      "Visual prompt:\n" +
-      "Style: " + style + "\n" +
-      "Action: " + scene + "\n" +
-      "Character references: " +
-      (characters || "None supplied") +
-      "\n\n-------------------------\n\n";
-  });
+    const chunks = [];
 
-  const blob = new Blob(
-    [output],
-    { type: "text/plain;charset=utf-8" }
-  );
+    paragraphs.forEach(function (paragraph) {
+      /*
+        Split at sentence-ending punctuation while preserving the punctuation.
+        This is a lightweight splitter, not a language-understanding model.
+      */
+      const sentences = paragraph.match(/[^.!?।]+[.!?।]+|[^.!?।]+$/g);
 
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
+      if (sentences && sentences.length) {
+        sentences.forEach(function (sentence) {
+          const trimmed = sentence.trim();
+          if (trimmed) chunks.push(trimmed);
+        });
+      } else {
+        chunks.push(paragraph);
+      }
+    });
 
-  link.href = url;
-  link.download = title.replace(/[^\w-]+/g, "_") + "_storyboard.txt";
+    return chunks;
+  }
 
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
+  function groupSentences(sentences, mode) {
+    const groups = [];
 
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+    let targetWords = 45;
 
-loadCharacterNotes();
-refreshCharacters();
-</script>
+    if (mode === "short") targetWords = 22;
+    if (mode === "long") targetWords = 85;
 
-</body>
-</html>
+    let current = [];
+    let currentWords = 0;
+
+    sentences.forEach(function (sentence) {
+      const words = sentence.split(/\s+/).filter(Boolean).length;
+
+      if (
+        current.length > 0 &&
+        currentWords + words > targetWords
+      ) {
+        groups.push(current.join(" "));
+        current = [];
+        currentWords = 0;
+      }
+
+      current.push(sentence);
+      currentWords += words;
+    });
+
+    if (current.length) {
+      groups.push(current.join(" "));
+    }
+
+    return groups;
+  }
+
+  function getCharacterDescription() {
+    const details = [];
+
+    if (selectedCharacter) {
+      if (selectedCharacter.name) {
+        details.push("Character name: " + selectedCharacter.name);
+      }
+
+      if (selectedCharacter.age) {
+        details.push("Character age: " + selectedCharacter.age);
+      }
+
+      if (selectedCharacter.appearance) {
+        details.push("Appearance: " + selectedCharacter.appearance);
+      }
+
+      if (selectedCharacter.personality) {
+        details.push("Personality: " + selectedCharacter.personality);
+      }
+    }
+
+    const notes = $("characterNotes").value.trim();
+
+    if (notes) {
+      details.push("Additional character instructions: " + notes);
+    }
+
+    if (details.length) {
+      details.push(
+        "Keep the same character identity, face, age, hairstyle, clothing, and body proportions consistent across all scenes."
+      );
+    }
+
+    return details.join("\n");
+  }
+
+  function makeVisualPrompt(sceneText, sceneNumber) {
+    const title = $("storyTitle").value.trim() || "Untitled Story";
+    const style = $("style").value;
+    const characterDescription = getCharacterDescription();
+
+    const cameraOptions = [
+      "wide establishing shot",
+      "medium shot showing character action",
+      "close-up capturing facial emotion",
+      "over-the-shoulder cinematic shot",
+      "wide environmental shot with clear character placement"
+    ];
+
+    const camera = cameraOptions[(sceneNumber - 1) % cameraOptions.length];
+
+    return [
+      "STORY TITLE: " + title,
+      "SCENE: " + sceneNumber,
+      "VISUAL STYLE: " + style,
+      "SCENE ACTION: " + sceneText,
+      characterDescription
+        ? "CHARACTER CONTINUITY:\n" + characterDescription
+        : "CHARACTERS: Use appearances appropriate to the story and keep them consistent throughout.",
+      "CAMERA: " + camera,
+      "COMPOSITION: Clear foreground, middle ground, and background. Show the main action clearly.",
+      "LIGHTING: Soft cinematic lighting, balanced shadows, appealing colors.",
+      "QUALITY: Detailed environment, expressive faces, clean animation-ready composition.",
+      "AVOID: Distorted hands, extra fingers, duplicate characters, inconsistent clothing, unreadable text, watermarks."
+    ].filter(Boolean).join("\n\n");
+  }
+
+  function generateStoryboard() {
+    const title = $("storyTitle").value.trim() || "Untitled Story";
+    const story = $("storyText").value.trim();
+    const mode = $("sceneLength").value;
+
+    if (!story) {
+      setStatus("Please enter a story before generating the storyboard.", true);
+      $("storyText").focus();
+      return;
+    }
+
+    const sentences = splitIntoSentences(story);
+
+    if (!sentences.length) {
+      setStatus("I couldn't find usable story text. Please try again.", true);
+      return;
+    }
+
+    const sceneTexts = groupSentences(sentences, mode);
+
+    generatedScenes = sceneTexts.map(function (text, index) {
+      return {
+        number: index + 1,
+        storyText: text,
+        visualPrompt: makeVisualPrompt(text, index + 1)
+      };
+    });
+
+    renderStoryboard();
+
+    $("storySummary").textContent =
+      'Title: "' + title + '" · ' +
+      generatedScenes.l
