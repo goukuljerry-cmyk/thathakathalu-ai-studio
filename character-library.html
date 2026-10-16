@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Character Library | Thathakathalu AI Studio</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  padding:20px;
+  background:#100e20;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+h1{color:#d6a0ff}
+.card{
+  background:#201e38;
+  padding:20px;
+  border-radius:18px;
+  margin:18px 0;
+}
+label{display:block;margin:16px 0 8px}
+input,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #57516e;
+  border-radius:10px;
+  background:#100e20;
+  color:white;
+  font-size:16px;
+}
+textarea{min-height:100px}
+button{
+  padding:12px 16px;
+  margin:8px 5px 0 0;
+  border:0;
+  border-radius:10px;
+  background:#bd79f5;
+  color:#170d25;
+  font-weight:bold;
+  font-size:15px;
+}
+.secondary{background:#393653;color:white}
+.character{
+  border:1px solid #48425f;
+  padding:15px;
+  margin:15px 0;
+  border-radius:14px;
+  overflow-wrap:anywhere;
+}
+.character img{
+  width:100%;
+  max-height:350px;
+  object-fit:contain;
+  border-radius:10px;
+  background:#100e20;
+}
+small{color:#c4bdd6}
+a{color:#d6a0ff}
+</style>
+</head>
+
+<body>
+
+<h1>🎭 Character Library</h1>
+<p>Thathakathalu AI Studio — Save your cartoon characters.</p>
+
+<div class="card">
+<h2>➕ Add a Character</h2>
+
+<label>Character name</label>
+<input id="name" placeholder="Example: Ramayya Thatha">
+
+<label>Age</label>
+<input id="age" placeholder="Example: 65-year-old grandfather">
+
+<label>Appearance and clothing</label>
+<textarea id="appearance"
+placeholder="Grey hair, white dhoti, cream shirt, warm smile..."></textarea>
+
+<label>Character image</label>
+<input id="photo" type="file" accept="image/*">
+<small>Choose an image from your phone. Large images may exceed browser storage limits.</small>
+
+<label>Character personality</label>
+<textarea id="personality"
+placeholder="Kind, helpful, wise and friendly..."></textarea>
+
+<button onclick="saveCharacter()">Save Character</button>
+<button class="secondary" onclick="clearForm()">Clear Form</button>
+</div>
+
+<div class="card">
+<h2>📚 Saved Characters</h2>
+<input id="search" placeholder="Search characters..."
+oninput="renderCharacters()">
+<div id="list"></div>
+</div>
+
+<p><a href="index.html">← Back to Story Studio</a></p>
+
+<script>
+const STORAGE_KEY = "thathakathalu_character_library_v1";
+let characters = [];
+
+try {
+  characters = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  if (!Array.isArray(characters)) characters = [];
+} catch (error) {
+  characters = [];
+}
+
+let selectedImage = "";
+
+document.getElementById("photo").addEventListener("change", function () {
+  const file = this.files[0];
+  selectedImage = "";
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please select an image file.");
+    this.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Please choose an image under 2 MB.");
+    this.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function () {
+    selectedImage = reader.result;
+  };
+
+  reader.onerror = function () {
+    alert("Could not read this image. Please try another.");
+  };
+
+  reader.readAsDataURL(file);
+});
+
+function saveCharacter() {
+  const name = document.getElementById("name").value.trim();
+  const age = document.getElementById("age").value.trim();
+  const appearance = document.getElementById("appearance").value.trim();
+  const personality = document.getElementById("personality").value.trim();
+
+  if (!name) {
+    alert("Please enter a character name.");
+    return;
+  }
+
+  if (!appearance) {
+    alert("Please enter the character's appearance.");
+    return;
+  }
+
+  const character = {
+    id: Date.now().toString() + Math.random().toString(16).slice(2),
+    name,
+    age,
+    appearance,
+    personality,
+    image: selectedImage,
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    characters.push(character);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(characters));
+  } catch (error) {
+    characters.pop();
+    alert("Storage is full. Remove some saved images or choose a smaller image.");
+    return;
+  }
+
+  clearForm();
+  renderCharacters();
+  alert("Character saved successfully!");
+}
+
+function clearForm() {
+  document.getElementById("name").value = "";
+  document.getElementById("age").value = "";
+  document.getElementById("appearance").value = "";
+  document.getElementById("personality").value = "";
+  document.getElementById("photo").value = "";
+  selectedImage = "";
+}
+
+function makeText(tag, text) {
+  const element = document.createElement(tag);
+  element.textContent = text;
+  return element;
+}
+
+function renderCharacters() {
+  const list = document.getElementById("list");
+  const query = document.getElementById("search").value.toLowerCase().trim();
+
+  list.replaceChildren();
+
+  const filtered = characters.filter(c =>
+    [c.name, c.age, c.appearance, c.personality]
+      .some(value => (value || "").toLowerCase().includes(query))
+  );
+
+  if (!filtered.length) {
+    list.appendChild(makeText("p", "No saved characters yet. Add your first character above."));
+    return;
+  }
+
+  filtered.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "character";
+
+    card.appendChild(makeText("h3", "🎭 " + c.name));
+
+    if (c.image && c.image.startsWith("data:image/")) {
+      const img = document.createElement("img");
+      img.src = c.image;
+      img.alt = c.name;
+      img.loading = "lazy";
+      card.appendChild(img);
+    }
+
+    card.appendChild(makeText("p", "Age: " + (c.age || "Not specified")));
+    card.appendChild(makeText("p", "Appearance: " + c.appearance));
+    card.appendChild(makeText("p", "Personality: " + (c.personality || "Not specified")));
+
+    const prompt = [
+      "CHARACTER REFERENCE",
+      "Name: " + c.name,
+      "Age: " + (c.age || "Not specified"),
+      "Appearance: " + c.appearance,
+      "Personality: " + (c.personality || "Not specified"),
+      "Keep the same face, hairstyle, clothing and proportions in every scene."
+    ].join("\n");
+
+    const copy = document.createElement("button");
+    copy.textContent = "Copy Character Prompt";
+    copy.onclick = async function () {
+      try {
+        await navigator.clipboard.writeText(prompt);
+        alert("Character prompt copied!");
+      } catch (error) {
+        window.prompt("Copy this character prompt:", prompt);
+      }
+    };
+    card.appendChild(copy);
+
+    const remove = document.createElement("button");
+    remove.textContent = "Delete";
+    remove.className = "secondary";
+    remove.onclick = function () {
+      if (!confirm("Delete " + c.name + "?")) return;
+
+      characters = characters.filter(item => item.id !== c.id);
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(characters));
+        renderCharacters();
+      } catch (error) {
+        alert("Could not update browser storage.");
+      }
+    };
+    card.appendChild(remove);
+
+    list.appendChild(card);
+  });
+}
+
+renderCharacters();
+</script>
+
+</body>
+  </html>
