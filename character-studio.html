@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Character Studio | Thathakathalu</title>
+<style>
+body{margin:0;padding:20px;background:#111124;color:white;font-family:Arial,sans-serif}
+main{max-width:650px;margin:auto}
+h1{color:#d3a5ff}
+.card{background:#202039;padding:18px;border-radius:14px}
+label{display:block;margin:15px 0 8px}
+textarea,input,select{width:100%;padding:12px;box-sizing:border-box;background:#111124;color:white;border:1px solid #555576;border-radius:8px;font-size:16px}
+textarea{height:130px}
+button{margin-top:15px;padding:13px;background:#bd88ff;border:0;border-radius:8px;font-weight:bold}
+#output{white-space:pre-wrap;line-height:1.6;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main>
+<h1>🎭 Character Studio</h1>
+<p>Create character design prompts for your cartoon stories.</p>
+<div class="card">
+<label for="story">Your story</label>
+<textarea id="story" placeholder="Paste your story here"></textarea>
+
+<label for="role">Character role</label>
+<select id="role">
+<option>Hero</option>
+<option>Grandfather</option>
+<option>Grandmother</option>
+<option>Child</option>
+<option>Villain</option>
+<option>Animal</option>
+<option>Other character</option>
+</select>
+
+<label for="age">Age or life stage</label>
+<input id="age" placeholder="Example: elderly man">
+
+<label for="appearance">Appearance and clothing</label>
+<textarea id="appearance" placeholder="Example: white dhoti, kind eyes, grey hair"></textarea>
+
+<label for="style">Cartoon style</label>
+<select id="style">
+<option>Simple 3D cartoon</option>
+<option>Colourful Indian village cartoon</option>
+<option>Fantasy 3D cartoon</option>
+<option>Funny 3D cartoon</option>
+</select>
+
+<button onclick="generate()">Create Character Prompt</button>
+<button onclick="copyPrompt()">Copy Prompt</button>
+<div id="output"></div>
+</div>
+<p><a href="index.html" style="color:#d3a5ff">← Back to Story Studio</a></p>
+</main>
+
+<script>
+function generate(){
+const story=document.getElementById('story').value.trim();
+const role=document.getElementById('role').value;
+const age=document.getElementById('age').value.trim()||'appropriate to the story';
+const appearance=document.getElementById('appearance').value.trim()||'design suitable to the story';
+const style=document.getElementById('style').value;
+if(!story){alert('Paste your story first.');return;}
+const prompt=`CHARACTER DESIGN PROMPT
+
+Character role: ${role}
+Age: ${age}
+Appearance and clothing: ${appearance}
+Visual style: ${style}
+
+Story context:
+${story}
+
+Design one original, appealing cartoon character who fits this story.
+Use clear facial features, expressive eyes, readable emotions, appealing colours and detailed clothing.
+Show the complete character from head to toe against a simple background.
+Use consistent proportions and a polished 3D cartoon aesthetic.
+Keep the character design suitable for a family-friendly animated story.
+
+Consistency note: Save this description and reuse it as a reference in future scenes.`;
+
+document.getElementById('output').textContent=prompt;
+}
+async function copyPrompt(){
+const text=document.getElementById('output').textContent;
+if(!text){alert('Create a prompt first.');return;}
+try{await navigator.clipboard.writeText(text);alert('Prompt copied!');}
+catch(e){alert('Select and copy the prompt manually.');}
+}
+</script>
+</body>
+</html>
